@@ -1,3 +1,4 @@
+'use server'
 import { ID, Query } from "node-appwrite";
 import { BUCKET_ID, database, DATABASE_ID, ENDPOINT, PATIENT_COLLECTION_ID, PROJECT_ID, storage, users } from '../appwrite.config'
 import { parseStringify } from "../utils";
@@ -42,11 +43,11 @@ export const  registerPatient = async ({identificationDocument,...patient}:Regis
                 identificationDocument.get('fileName') as string,
             
             )
-            file = await storage.createFile(BUCKET_ID!,ID.unique(),inputFile);
+            file = await storage.createFile("66bed3ec00090d1b061c"!,ID.unique(),inputFile);
         }
         const newPatient = await database.createDocument(
-            DATABASE_ID!,
-            PATIENT_COLLECTION_ID!,
+            "66bed3020013abcab0b1"!,
+            "66bed33a000bddc6e33f"!,
             ID.unique(),
             {
                 identificationDocumentId: file?.$id || null,

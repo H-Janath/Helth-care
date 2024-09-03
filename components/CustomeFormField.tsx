@@ -19,6 +19,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox";
+
 interface CustomProps {
     control: Control<any>,
     fieldType: FormFieldType,
@@ -75,7 +76,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             return(
                 <FormControl>
                     <PhoneInput 
-                    defaultCountry="US"
+                    defaultCountry="LK"
                     placeholder={placeholder}
                     international
                     withCountryCallingCode

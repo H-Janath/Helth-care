@@ -9,7 +9,7 @@ import SubmitButton from "../SubmitButton"
 import { useState } from "react"
 import { PatientFormValidation, UserFormValidation } from "@/lib/validation"
 import { useRouter } from "next/navigation"
-import { createUser, registerPatient } from "@/lib/action/patient.action"
+import { registerPatient } from "@/lib/action/patient.action"
 import { FormFieldType } from "./PatientForm"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
 import { Doctors, GenderOptions, IdentificationTypes, PatientFormDefaultValues } from "@/constant"
@@ -18,12 +18,13 @@ import { SelectItem } from "../ui/select"
 import Image from "next/image"
 import FileUploader from "../FileUploader"
 
-const RegisterForm = ({ user }: { user: User }) => {
+const Register = ({ user }: { user: User }) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof PatientFormValidation>>({
-        resolver: zodResolver(UserFormValidation),
+        resolver: zodResolver(PatientFormValidation),
         defaultValues: {
             ...PatientFormDefaultValues,
             name: "",
@@ -35,27 +36,28 @@ const RegisterForm = ({ user }: { user: User }) => {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
         setIsLoading(true);
+        console.log("janath")
         let formData;
-        if(values.identificationDocument && values.identificationDocument.length>0){
-            const blobFile = new Blob([values.identificationDocument[0]],{
+        if (values.identificationDocument && values.identificationDocument.length > 0) {
+            const blobFile = new Blob([values.identificationDocument[0]], {
                 type: values.identificationDocument[0].type,
 
             })
             formData = new FormData();
-            formData.append('blobFile',blobFile);
-            formData.append('fileName',values.identificationDocument[0].name);
+            formData.append('blobFile', blobFile);
+            formData.append('fileName', values.identificationDocument[0].name);
         }
         try {
-            const patientData ={
+            const patientData = {
                 ...values,
                 userId: user.$id,
-                birthDate : new Date(values.birthDate),
+                birthDate: new Date(values.birthDate),
                 identificationDocument: formData,
             }
-             //@ts-ignore   
+            //@ts-ignore   
             const patient = await registerPatient(patientData);
 
-            if(patient) router.push(`/patient/${user.$id}/new-appoinment`);
+            if (patient) router.push(`/patient/${user.$id}/new-appoinment`);
         } catch (error) {
             console.log(error);
         }
@@ -136,13 +138,13 @@ const RegisterForm = ({ user }: { user: User }) => {
                     />
                 </div>
                 <div className="flex flex-col gap-6 xl:flex-row">
-                <CustomeFormField
+                    <CustomeFormField
                         fieldType={FormFieldType.INPUT}
                         control={form.control}
                         name="address"
                         label="Address"
-                        placeholder="14th Street, New York" showTimeSelect={false}/>
-                     <CustomeFormField
+                        placeholder="14th Street, New York" showTimeSelect={false} />
+                    <CustomeFormField
                         fieldType={FormFieldType.INPUT}
                         control={form.control}
                         name="occupation"
@@ -152,7 +154,7 @@ const RegisterForm = ({ user }: { user: User }) => {
                     />
                 </div>
                 <div className="flex flex-col gap-6 xl:flex-row">
-                <CustomeFormField
+                    <CustomeFormField
                         fieldType={FormFieldType.INPUT}
                         control={form.control}
                         name="emergencyContactName"
@@ -175,22 +177,22 @@ const RegisterForm = ({ user }: { user: User }) => {
                     </div>
                 </section>
                 <CustomeFormField
-                        fieldType={FormFieldType.SELECT}
-                        control={form.control}
-                        name="primaryPhysician"
-                        label="Primary physician"
-                        placeholder="Select a physician"
-                        showTimeSelect={false}
+                    fieldType={FormFieldType.SELECT}
+                    control={form.control}
+                    name="primaryPhysician"
+                    label="Primary physician"
+                    placeholder="Select a physician"
+                    showTimeSelect={false}
                 >
-                    {Doctors.map((doctor)=>(
+                    {Doctors.map((doctor) => (
                         <SelectItem key={doctor.name} value={doctor.name}>
                             <div className="flex cursor-pointer items-center gap-2">
                                 <Image
-                                src={doctor.image}
-                                width={32}
-                                height={32}
-                                alt={doctor.name}
-                                className="rounded-full border-dark-500"
+                                    src={doctor.image}
+                                    width={32}
+                                    height={32}
+                                    alt={doctor.name}
+                                    className="rounded-full border-dark-500"
                                 />
                                 <p>
                                     {doctor.name}
@@ -201,14 +203,14 @@ const RegisterForm = ({ user }: { user: User }) => {
                     ))}
                 </CustomeFormField>
                 <div className="flex flex-col gap-6 xl:flex-row">
-                <CustomeFormField
+                    <CustomeFormField
                         fieldType={FormFieldType.INPUT}
                         control={form.control}
-                        name="insuaranceProvider"
+                        name="insuranceProvider"
                         label="Insuarance provider"
-                        placeholder="BlueCross BlueShiled" 
-                        showTimeSelect={false}/>
-                     <CustomeFormField
+                        placeholder="BlueCross BlueShiled"
+                        showTimeSelect={false} />
+                    <CustomeFormField
                         fieldType={FormFieldType.INPUT}
                         control={form.control}
                         name="insurancePolicyNumber"
@@ -218,14 +220,14 @@ const RegisterForm = ({ user }: { user: User }) => {
                     />
                 </div>
                 <div className="flex flex-col gap-6 xl:flex-row">
-                <CustomeFormField
+                    <CustomeFormField
                         fieldType={FormFieldType.TEXTAREA}
                         control={form.control}
                         name="allergies"
                         label="Allergies (if any)"
-                        placeholder="Penuts, Penicilin,Pollen" 
-                        showTimeSelect={false}/>
-                     <CustomeFormField
+                        placeholder="Penuts, Penicilin,Pollen"
+                        showTimeSelect={false} />
+                    <CustomeFormField
                         fieldType={FormFieldType.TEXTAREA}
                         control={form.control}
                         name="currentMedication"
@@ -236,14 +238,14 @@ const RegisterForm = ({ user }: { user: User }) => {
                     />
                 </div>
                 <div className="flex flex-col gap-6 xl:flex-row">
-                <CustomeFormField
+                    <CustomeFormField
                         fieldType={FormFieldType.TEXTAREA}
                         control={form.control}
                         name="familyMedicalHistory"
                         label="Family medical history"
-                        placeholder="Mother had brain cancer, Father has heart disease" 
-                        showTimeSelect={false}/>
-                     <CustomeFormField
+                        placeholder="Mother had brain cancer, Father has heart disease"
+                        showTimeSelect={false} />
+                    <CustomeFormField
                         fieldType={FormFieldType.TEXTAREA}
                         control={form.control}
                         name="pastMedicalHistory"
@@ -258,14 +260,14 @@ const RegisterForm = ({ user }: { user: User }) => {
                     </div>
                 </section>
                 <CustomeFormField
-                        fieldType={FormFieldType.SELECT}
-                        control={form.control}
-                        name="identificationType"
-                        label="Identification Type"
-                        placeholder="Select an identification type"
-                        showTimeSelect={false}
+                    fieldType={FormFieldType.SELECT}
+                    control={form.control}
+                    name="identificationType"
+                    label="Identification Type"
+                    placeholder="Select an identification type"
+                    showTimeSelect={false}
                 >
-                    {IdentificationTypes.map((type)=>(
+                    {IdentificationTypes.map((type) => (
                         <SelectItem key={type} value={type}>
                             {type}
                         </SelectItem>
@@ -273,26 +275,26 @@ const RegisterForm = ({ user }: { user: User }) => {
                     ))}
                 </CustomeFormField>
                 <CustomeFormField
-                        fieldType={FormFieldType.INPUT}
-                        control={form.control}
-                        name="identificationNumber"
-                        label="Identification number"
-                        placeholder="123456789"
-                        showTimeSelect={false}
-                    />
-                 <CustomeFormField
-                        fieldType={FormFieldType.SKELETON}
-                        control={form.control}
-                        name="identificationDocument"
-                        label="Scan copy of identification document"
-                        renderSkeleton={(field) => (
-                            <FormControl>
-                                <FileUploader files={field.value} onChange={field.onChange}/>
-                            </FormControl>
-                        )}
-                        showTimeSelect={false}
-                    />
-                    <section className="mb-12 space-y-6">
+                    fieldType={FormFieldType.INPUT}
+                    control={form.control}
+                    name="identificationNumber"
+                    label="Identification number"
+                    placeholder="123456789"
+                    showTimeSelect={false}
+                />
+                <CustomeFormField
+                    fieldType={FormFieldType.SKELETON}
+                    control={form.control}
+                    name="identificationDocument"
+                    label="Scan copy of identification document"
+                    renderSkeleton={(field) => (
+                        <FormControl>
+                            <FileUploader files={field.value} onChange={field.onChange} />
+                        </FormControl>
+                    )}
+                    showTimeSelect={false}
+                />
+                <section className="mb-12 space-y-6">
                     <div className="mb-9 space-y-1">
                         <h2 className="sub-header">Consent and Privacy</h2>
                     </div>
@@ -301,19 +303,26 @@ const RegisterForm = ({ user }: { user: User }) => {
                     fieldType={FormFieldType.CHECKBOX}
                     control={form.control}
                     name="treatmentConsent"
-                    label="I consent to tretement" showTimeSelect={false}                 
+                    label="I consent to receive treatment for my health condition."
+                    showTimeSelect={false}
                 />
-                                <CustomeFormField
+
+                <CustomeFormField
                     fieldType={FormFieldType.CHECKBOX}
                     control={form.control}
                     name="disclosureConsent"
-                    label="I consent to disclosure of information" showTimeSelect={false}                 
+                    label="I consent to the use and disclosure of my health
+            information for treatment purposes."
+                    showTimeSelect={false}
                 />
-                                <CustomeFormField
+
+                <CustomeFormField
                     fieldType={FormFieldType.CHECKBOX}
                     control={form.control}
                     name="privacyConsent"
-                    label="I consent to privacy policy" showTimeSelect={false}                 
+                    label="I acknowledge that I have reviewed and agree to the
+                privacy policy"
+                    showTimeSelect={false}
                 />
                 <SubmitButton isLoading={isLoading}>
                     Get Started
@@ -322,4 +331,4 @@ const RegisterForm = ({ user }: { user: User }) => {
         </Form>
     )
 }
-export default RegisterForm
+export default Register
