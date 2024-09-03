@@ -3,7 +3,9 @@ import { ID, Query } from "node-appwrite";
 import { BUCKET_ID, database, DATABASE_ID, ENDPOINT, PATIENT_COLLECTION_ID, PROJECT_ID, storage, users } from '../appwrite.config'
 import { parseStringify } from "../utils";
 import {InputFile} from 'node-appwrite/file';
+
 export const createUser = async (user: CreateUserParams)=>{
+    console.log("janath")
     try {
         const newUser = await users.create(
             ID.unique(),
@@ -12,6 +14,7 @@ export const createUser = async (user: CreateUserParams)=>{
             undefined,
             user.name
         )
+        console.log(newUser)
         return parseStringify(newUser);
     } catch (error:any) {
         console.log(error);
@@ -57,6 +60,19 @@ export const  registerPatient = async ({identificationDocument,...patient}:Regis
         )
 
         return parseStringify(newPatient);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getPatient = async (userId: string) => {
+    try {
+        const patient = await database.listDocuments(
+                "66bed3020013abcab0b1"!,
+                "66bed33a000bddc6e33f"!,
+                [Query.equal('userId',userId)]
+        );
+        return parseStringify(patient.documents[0]);
     } catch (error) {
         console.log(error);
     }
