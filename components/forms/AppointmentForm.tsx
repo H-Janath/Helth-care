@@ -70,7 +70,7 @@ const AppointmentForm = ({
         const appointment = await createAppointment(appoinmentData);
         if (appointment) {
           form.reset();
-          router.push(`/patients/${userId}/new-appoinement/success?appointmentId=${appointment.$id}`)
+          router.push(`/patients/${userId}/new-appoinment/success?appointmentId=${appointment.$id}`)
         }
       }
 
