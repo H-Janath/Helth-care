@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button';
 import { Doctors } from '@/constant';
 import { getAppointment } from '@/lib/action/appointment.action';
 import { formatDateTime } from '@/lib/utils';
+import { SearchParamProps } from '@/types';
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
 
 const Success = async({params:{userId},searchParams}:SearchParamProps) => {
 

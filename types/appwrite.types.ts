@@ -1,4 +1,5 @@
 import { Models } from "node-appwrite";
+import { Status } from ".";
 
 export interface Patient extends Models.Document {
   userId: string;
